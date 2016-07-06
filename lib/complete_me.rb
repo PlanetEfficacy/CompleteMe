@@ -20,7 +20,7 @@ class CompleteMe
       node = node.children[char]
     end
     node.flag = true
-    binding.pry
+    #binding.pry
     @count += 1
     something
   end
