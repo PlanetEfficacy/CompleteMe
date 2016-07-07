@@ -7,7 +7,31 @@ class CompleteMe
 
   def initialize
     @root = Node.new
-    @count = 0
+    @count = count_words
+  end
+
+  # def traverse(node, proc, container)
+  #   return if node.children.empty?
+  #   node.children.keys.each do |letter|
+  #     proc.call(node, letter, container) if proc
+  #     node = node.children[letter]
+  #     traverse(node)
+  #   end
+  # end
+
+  def count_words_in_this_node(node, counter)
+    return counter if node.children.empty?
+    node.children.keys.each do |letter|
+      counter += 1 if node.children[letter].flag
+      node = node.children[letter]
+      count_words_in_this_node(node, counter)
+    end
+  end
+
+  def count_words
+    node = @root
+    counter = 0
+    count_words_in_this_node(node, counter)
   end
 
   def insert(word)

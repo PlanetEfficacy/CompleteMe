@@ -32,6 +32,20 @@ class CompleteMeTest < Minitest::Test
     assert_equal 2, c.count
   end
 
+  def test_it_can_count_words_in_an_empty_node
+    c = CompleteMe.new
+    node = c.root
+    counter = 0
+    actual = c.count_words_in_this_node(node, counter)
+    assert_equal 0, actual
+  end
+
+  def test_it_actually_counts_words
+    c = CompleteMe.new
+    c.insert("pizza")
+    assert_equal 1, c.count
+  end
+
   def test_can_see_root_node
     c = CompleteMe.new
     c.insert("pizza")
