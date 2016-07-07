@@ -84,7 +84,12 @@ class CompleteMeTest < Minitest::Test
     assert_equal 2, c.count
   end
 
-  def test_it_can_find_words
+  def test_it_can_suggest_words
+    c = CompleteMe.new
+    c.insert("pizza")
+    c.insert("pizzeria")
+    actual = c.suggest("piz")
+    assert_equal ["pizza", "pizzeria"], actual
   end
 
 end

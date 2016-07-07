@@ -61,12 +61,15 @@ class CompleteMe
 
   def find_all_the_words(node, prefix, suggestions)
     suggestions << prefix if node.flag
-    return suggestions if node.children.empty?
-    node.children.keys.each do |char|
-        prefix += char
-        node = node.children[char]
-        find_all_the_words(node, prefix, suggestions)
+    if !node.children.empty?
+      node.children.keys.each do |char|
+        this_nodes_prefix = prefix
+        this_nodes_prefix += char
+        child_node = node.children[char]
+        find_all_the_words(child_node, this_nodes_prefix, suggestions)
+      end
     end
+    return suggestions
   end
 
 end
