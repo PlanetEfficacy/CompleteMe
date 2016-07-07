@@ -57,6 +57,13 @@ class CompleteMe
     return suggestions
   end
 
+  def populate(string)
+    words = string.split("\n")
+    words.each do |word|
+      insert(word)
+    end
+  end
+
 end
 
 #STUPID SHIT

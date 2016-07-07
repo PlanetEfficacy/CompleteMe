@@ -100,6 +100,17 @@ class CompleteMeTest < Minitest::Test
     assert_equal ["pizza", "pizzeria"], actual
   end
 
+  def test_it_can_populate_from_new_line_separated_list
+    c = CompleteMe.new
+    c.populate("pizza\npizzeria")
+    expected_count = 2
+    actual_count = c.count
+    expected_suggest = ["pizza", "pizzeria"]
+    actual_suggest = c.suggest("piz")
+    assert_equal expected_count, actual_count
+    assert_equal expected_suggest, actual_suggest
+  end
+
 end
 
 #STUPID SHIT BELOW
