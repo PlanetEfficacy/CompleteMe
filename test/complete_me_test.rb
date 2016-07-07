@@ -66,7 +66,6 @@ class CompleteMeTest < Minitest::Test
   end
 
   def test_it_knows_pizza_is_in_the_dictionary
-    skip
     c = CompleteMe.new
     c.insert("pizza")
     assert_equal ["pizza"], c.suggest("pizza")
@@ -79,18 +78,10 @@ class CompleteMeTest < Minitest::Test
   end
 
   def test_it_can_insert_words
-    skip
     c = CompleteMe.new
     c.insert("pizza")
     c.insert("pizzeria")
-    expected_node_keys = ["p", "i", "z", "z", "a", "e", "r", "i", "a"]
-    node_keys = []
-    node = c.root
-    until node.children.keys.length == 0
-      node_keys << node.children.keys[0]
-      node = node.children[node.children.keys[0]]
-    end
-    assert_equal expected_node_keys, node_keys
+    assert_equal 2, c.count
   end
 
   def test_it_can_find_words
