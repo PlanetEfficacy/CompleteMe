@@ -22,11 +22,11 @@ class CompleteMe
 
   def insert(word)
     node = @root
-    word.each_char.map do |char|
-      if !node.children.has_key?(char)
-        node.children[char] = Node.new
+    word.each_char.map do |letter|
+      if !node.children.has_key?(letter)
+        node.children[letter] = Node.new
       end
-      node = node.children[char]
+      node = node.children[letter]
     end
     node.flag = true
   end
@@ -34,23 +34,28 @@ class CompleteMe
   def suggest(prefix)
     suggestions = []
     node = @root
-    prefix.each_char do |char|
-      if !node.children.has_key?(char)
+    prefix.each_char do |letter|
+      if !node.children.has_key?(letter)
         return nil
       end
-      node = node.children[char]
+      node = node.children[letter]
     end
     find_all_the_words(node, prefix, suggestions)
+    #suggestions = order_suggestions_by_weight(suggestions)
     return suggestions
+  end
+
+  def order_suggestions_by_weight(suggestions)
+
   end
 
   def find_all_the_words(node, prefix, suggestions)
     suggestions << prefix if node.flag
     if !node.children.empty?
-      node.children.keys.each do |char|
+      node.children.keys.each do |letter|
         this_nodes_prefix = prefix
-        this_nodes_prefix += char
-        child_node = node.children[char]
+        this_nodes_prefix += letter
+        child_node = node.children[letter]
         find_all_the_words(child_node, this_nodes_prefix, suggestions)
       end
     end
@@ -62,6 +67,38 @@ class CompleteMe
     words.each do |word|
       insert(word)
     end
+  end
+
+  def select(prefix, selection)
+    node = @root
+    add_weight(node, prefix, selection)
+  end
+
+  def add_weight(node, prefix, selection)
+    letter = selection[0]
+    return nil if !node.children.has_key?(letter)
+    child_node = node.children[letter]
+    if selection.length == 1
+      node_weight = child_node.weight
+      if node_weight.has_key?(prefix)
+        node_weight[prefix] += 1
+      else
+        node_weight[prefix] = 1
+      end
+    else
+      new_selection = selection[1..-1]
+      add_weight(child_node, prefix, new_selection)
+    end
+  end
+
+  def find_weight(prefix, selection, node=@root)
+    if node.flag
+      return node.weight[prefix] ? node.weight[prefix] : 0
+    end
+    letter = selection[0]
+    return nil if !node.children.has_key?(letter)
+    child_node = node.children[letter]
+    find_weight(prefix, selection[1..-1], child_node)
   end
 
 end

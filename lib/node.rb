@@ -5,7 +5,7 @@ class Node
   def initialize
     @flag = false
     @children = {}
-    @weight
+    @weight = {}
   end
 
 

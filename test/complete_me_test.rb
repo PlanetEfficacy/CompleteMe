@@ -111,6 +111,28 @@ class CompleteMeTest < Minitest::Test
     assert_equal expected_suggest, actual_suggest
   end
 
+  def test_it_can_find_weight
+    c = CompleteMe.new
+    c.populate("pizza\npizzeria")
+    c.select("piz", "pizzeria")
+    actual1 = c.find_weight("piz", "pizzeria")
+    expected1 = 1
+    c.select("piz", "pizzeria")
+    actual2 = c.find_weight("piz", "pizzeria")
+    expected2 = 2
+    assert_equal expected1, actual1
+    assert_equal expected2, actual2
+  end
+
+  def test_it_can_select
+    skip
+    c = CompleteMe.new
+    c.populate("pizza\npizzeria")
+    c.select("piz", "pizzeria")
+    actual = c.suggest("piz")
+    expected = ["pizzeria", "pizza"]
+    assert_equal expected, actual
+  end
 end
 
 #STUPID SHIT BELOW
