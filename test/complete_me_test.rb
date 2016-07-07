@@ -12,35 +12,44 @@ class CompleteMeTest < Minitest::Test
     assert c
   end
 
-  def test_a_CompleteMe_has_a_root
+  def test_a_complete_me_has_a_root
     c = CompleteMe.new
     assert c.root
   end
 
-  def test_a_CompleteMe_has_a_root_that_is_a_node
+  def test_a_complete_me_has_a_root_that_is_a_node
     c = CompleteMe.new
     root = c.root
     class_name = root.class.name
     assert_equal "Node", class_name
   end
 
-  def test_a_CompleteMe_can_update_word_count
+  def test_a_complete_me_can_update_word_count
     c = CompleteMe.new
+    expected1 = 0
+    actual1 = c.count
+    expected2 = 1
     c.insert("pizza")
-    assert_equal 1, c.count
+    actual2 = c.count
+    expected3 = 2
     c.insert("pizzeria")
-    assert_equal 2, c.count
+    actual3 = c.count
+
+    assert_equal expected1, actual1, "there are no words"
+    assert_equal expected2, actual2, "the only word is pizza"
+    assert_equal expected3, actual3, "there are two words, pizza and pizzeria"
   end
 
   def test_it_can_count_words_in_an_empty_node
     c = CompleteMe.new
     node = c.root
     counter = 0
-    actual = c.count_words_in_this_node(node, counter)
+    actual = c.count(node)
     assert_equal 0, actual
   end
 
   def test_it_actually_counts_words
+    skip
     c = CompleteMe.new
     c.insert("pizza")
     assert_equal 1, c.count
@@ -78,6 +87,7 @@ class CompleteMeTest < Minitest::Test
   end
 
   def test_it_can_insert_words
+    skip
     c = CompleteMe.new
     c.insert("pizza")
     c.insert("pizzeria")

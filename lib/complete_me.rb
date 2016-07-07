@@ -3,36 +3,43 @@ require 'pry'
 
 class CompleteMe
   attr_accessor :root
-  attr_reader :count
+  #attr_reader :count
 
   def initialize
     @root = Node.new
-    @count = count_words
+    @counter = 0
+    #count_words
   end
 
-  # def traverse(node, proc, container)
-  #   return if node.children.empty?
-  #   node.children.keys.each do |letter|
-  #     proc.call(node, letter, container) if proc
-  #     node = node.children[letter]
-  #     traverse(node)
-  #   end
-  # end
-
-  def count_words_in_this_node(node, counter)
-    return counter if node.children.empty?
-    node.children.keys.each do |letter|
-      counter += 1 if node.children[letter].flag
-      node = node.children[letter]
-      count_words_in_this_node(node, counter)
+  def count(node=@root)
+    word_count = 0
+    word_count += 1 if node.flag
+    if !node.children.empty?
+      node.children.keys.each do |letter|
+        child_node = node.children[letter]
+        word_count += count(child_node)
+      end
     end
+    return word_count
   end
-
-  def count_words
-    node = @root
-    counter = 0
-    count_words_in_this_node(node, counter)
-  end
+  # def count_words_in_this_node(node, counter)
+  #   counter += 1 if node.flag
+  #   if !node.children.empty?
+  #     node.children.keys.each do |letter|
+  #       #child_word_counter = counter
+  #       child_node = node.children[letter]
+  #       counter += count_words_in_this_node(child_node, counter)
+  #     end
+  #   end
+  #   return counter
+  # end
+  #
+  # def count
+  #   node = @root
+  #   counter = @counter
+  #   binding.pry
+  #   new_counter = count_words_in_this_node(node, counter)
+  # end
 
   def insert(word)
     node = @root
@@ -43,7 +50,7 @@ class CompleteMe
       node = node.children[char]
     end
     node.flag = true
-    @count += 1
+    #@count += 1
   end
 
   def suggest(prefix)
@@ -73,3 +80,13 @@ class CompleteMe
   end
 
 end
+
+
+# def traverse(node, proc, container)
+#   return if node.children.empty?
+#   node.children.keys.each do |letter|
+#     proc.call(node, letter, container) if proc
+#     node = node.children[letter]
+#     traverse(node)
+#   end
+# end
