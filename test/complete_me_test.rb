@@ -49,7 +49,6 @@ class CompleteMeTest < Minitest::Test
   end
 
   def test_it_actually_counts_words
-    skip
     c = CompleteMe.new
     c.insert("pizza")
     assert_equal 1, c.count
@@ -87,7 +86,6 @@ class CompleteMeTest < Minitest::Test
   end
 
   def test_it_can_insert_words
-    skip
     c = CompleteMe.new
     c.insert("pizza")
     c.insert("pizzeria")
