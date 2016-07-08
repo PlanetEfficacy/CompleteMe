@@ -1,6 +1,8 @@
 class Node
 
-  attr_accessor :flag, :children, :weight
+  attr_accessor :flag,
+                :children,
+                :weight
 
   def initialize
     @flag = false
@@ -9,11 +11,11 @@ class Node
   end
 
   def has_children?
-    return !@children.empty?
+    !@children.empty?
   end
 
   def does_not_have_children?
-    return @children.empty?
+    @children.empty?
   end
 
 end
