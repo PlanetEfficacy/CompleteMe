@@ -41,12 +41,29 @@ class CompleteMe
       node = node.children[letter]
     end
     find_all_the_words(node, prefix, suggestions)
-    #suggestions = order_suggestions_by_weight(suggestions)
+    suggestions = order_suggestions_by_weight(suggestions, prefix)
     return suggestions
   end
 
-  def order_suggestions_by_weight(suggestions)
+  def order_suggestions_by_weight(suggestions, prefix)
+    weights_and_suggestions = suggestions.map do |suggestion|
+      [suggestion, find_weight(prefix, suggestion)]
+    end
 
+    #binding.pry
+    weights_and_suggestions = weights_and_suggestions.sort {
+      |weight_suggestion_pair_1, weight_suggestion_pair_2|
+      weight_suggestion_pair_1[0] <=> weight_suggestion_pair_2[0]
+    }
+    weights_and_suggestions = weights_and_suggestions.sort {
+      |weight_suggestion_pair_1, weight_suggestion_pair_2|
+      weight_suggestion_pair_2[1] <=> weight_suggestion_pair_1[1]
+    }
+
+
+    return weights_and_suggestions.map do |weight_suggestion_pair|
+      weight_suggestion_pair[0]
+    end
   end
 
   def find_all_the_words(node, prefix, suggestions)
@@ -92,7 +109,7 @@ class CompleteMe
   end
 
   def find_weight(prefix, selection, node=@root)
-    if node.flag
+    if node.flag && selection.length == 0
       return node.weight[prefix] ? node.weight[prefix] : 0
     end
     letter = selection[0]

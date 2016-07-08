@@ -113,24 +113,114 @@ class CompleteMeTest < Minitest::Test
 
   def test_it_can_find_weight
     c = CompleteMe.new
-    c.populate("pizza\npizzeria")
+    words = ["pi", "pize", "pizz", "pizza", "pizzeria", "pizzicato"].join("\n")
+    c.populate(words)
     c.select("piz", "pizzeria")
+    #binding.pry
     actual1 = c.find_weight("piz", "pizzeria")
     expected1 = 1
     c.select("piz", "pizzeria")
     actual2 = c.find_weight("piz", "pizzeria")
     expected2 = 2
+    c.select("piz", "pizzeria")
+    c.select("piz", "pizzeria")
+    c.select("piz", "pizza")
+    actual3 = c.find_weight("piz", "pizzeria")
+    expected3 = 4
+    actual4 = c.find_weight("piz", "pizza")
+    expected4 = 1
     assert_equal expected1, actual1
     assert_equal expected2, actual2
+    assert_equal expected3, actual3
+    assert_equal expected4, actual4
+  end
+
+  def test_it_can_order_suggestions_by_weight
+    c = CompleteMe.new
+    c.populate("pizza\npizzeria")
+    prefix = "piz"
+    c.select(prefix, "pizzeria")
+    suggestions = c.suggest(prefix)
+    actual = c.order_suggestions_by_weight(suggestions, prefix)
+    expected = ["pizzeria", "pizza"]
+    assert_equal expected, actual
   end
 
   def test_it_can_select
-    skip
     c = CompleteMe.new
     c.populate("pizza\npizzeria")
     c.select("piz", "pizzeria")
     actual = c.suggest("piz")
     expected = ["pizzeria", "pizza"]
+    assert_equal expected, actual
+  end
+
+  def test_it_suggests_correctly_for_piz
+    c = CompleteMe.new
+    words = ["pizza", "pizzeria", "pizzicato", "pizzle", "pize"].join("\n")
+    c.populate(words)
+    actual = c.suggest("piz")
+    expected = ["pize", "pizza", "pizzeria", "pizzicato", "pizzle"]
+    assert_equal expected, actual
+  end
+
+  def test_it_can_track_weight_specific_to_substring_selection
+    c = CompleteMe.new
+    words = ["pizza", "pizzeria", "pizzicato"].join("\n")
+    c.populate(words)
+
+    c.select("piz", "pizzeria")
+    c.select("piz", "pizzeria")
+    c.select("piz", "pizzeria")
+
+    c.select("pi", "pizza")
+    c.select("pi", "pizza")
+    c.select("pi", "pizzicato")
+
+    actual1 = c.suggest("piz")
+    expected1 = ["pizzeria", "pizza", "pizzicato"]
+    actual2 = c.suggest("pi")
+    expected2 = ["pizza", "pizzicato","pizzeria"]
+
+    assert_equal expected1, actual1
+    assert_equal expected2, actual2
+
+  end
+
+  def test_it_orders_alphabetically_when_weight_is_equal
+    c = CompleteMe.new
+    words = ["pizza", "pizzeria", "pizzicato"].join("\n")
+    c.populate(words)
+
+    c.select("piz", "pizzeria")
+    c.select("piz", "pizzeria")
+    c.select("piz", "pizzeria")
+
+    c.select("piz", "pizza")
+    c.select("piz", "pizza")
+    c.select("piz", "pizza")
+
+    actual_weight1 = c.find_weight("piz", "pizzeria")
+    actual_weight2 = c.find_weight("piz", "pizza")
+    actual_suggestion = c.suggest("piz")
+
+    expected_weight1 = 3
+    expected_weight2 = 3
+    expected_suggestion = ["pizza", "pizzeria", "pizzicato"]
+
+  end
+
+  def test_weight_takes_precedence_over_alpha_in_sort
+    c = CompleteMe.new
+    words = ["pi", "pize", "pizz", "pizza", "pizzeria", "pizzicato"].join("\n")
+    c.populate(words)
+    prefix = "piz"
+    c.select(prefix, "pizzeria")
+    weight = c.find_weight(prefix, "pizzeria")
+    suggestions = c.suggest(prefix)
+    #binding.pry
+    actual = c.order_suggestions_by_weight(suggestions, prefix)
+    expected = ["pizzeria", "pize", "pizz", "pizza", "pizzicato"]
     assert_equal expected, actual
   end
 end
