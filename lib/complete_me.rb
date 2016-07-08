@@ -119,32 +119,3 @@ class CompleteMe
   end
 
 end
-
-#STUPID SHIT
-# def traverse(node, proc, container)
-#   return if node.children.empty?
-#   node.children.keys.each do |letter|
-#     proc.call(node, letter, container) if proc
-#     node = node.children[letter]
-#     traverse(node)
-#   end
-# end
-
-# def count_words_in_this_node(node, counter)
-#   counter += 1 if node.flag
-#   if !node.children.empty?
-#     node.children.keys.each do |letter|
-#       #child_word_counter = counter
-#       child_node = node.children[letter]
-#       counter += count_words_in_this_node(child_node, counter)
-#     end
-#   end
-#   return counter
-# end
-#
-# def count
-#   node = @root
-#   counter = @counter
-#   binding.pry
-#   new_counter = count_words_in_this_node(node, counter)
-# end

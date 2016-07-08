@@ -1,3 +1,4 @@
+require 'SimpleCov'
 require 'minitest/autorun'
 require 'minitest/pride'
 require_relative '../lib/complete_me'
@@ -224,48 +225,3 @@ class CompleteMeTest < Minitest::Test
     assert_equal expected, actual
   end
 end
-
-#STUPID SHIT BELOW
-  # def test_it_can_insert_two_totally_different_words
-  #   c = CompleteMe.new
-  #   c.insert("pi")
-  #   c.insert("at")
-  #   expected_node_keys = ["p", "i", "a", "t"]
-  #   node_keys = []
-  #   node = c.root
-  #   node.each do |child|
-  #     binding.pry
-  #   end
-  #   # while node.children.length > 0
-  #   #   children = node.children
-  #   #   children.each do |child|
-  #   #     if child
-  #   #     end
-  #   #   end
-  #   # end
-  #   #   node.children.each_value do |value|
-  #
-  #
-  # end
-
-  # def test_it_can_insert_two_words
-  #   skip
-  #   c = CompleteMe.new
-  #   c.insert("to")
-  #   c.insert("too")
-  #   expected_node_keys = ["t", "o", "o"]
-  #   node_keys = []
-  #   expected_word_count = 2
-  #   node = c.root
-  #   expected_flags = [false, true, true]
-  #   actual_flags = {}
-  #   binding.pry
-  #   while node.children.keys.length >= 0
-  #     node_keys << node.children.keys[0]
-  #     actual_flags[node.object_id] = node.flag
-  #     node = node.children[node.children.keys[0]]
-  #   end
-  #   assert_equal node_keys, expected_node_keys
-  #   assert_equal c.count, expected_word_count
-  #   assert_equal actual_flags.values, expected_flags
-  # end
