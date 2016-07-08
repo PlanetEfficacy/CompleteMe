@@ -29,7 +29,19 @@ class NodeTest < Minitest::Test
 
   def test_a_node_has_weight
     n = Node.new
-    assert_equal nil, n.weight
+    assert_equal Hash.new, n.weight
+  end
+
+  def test_a_node_knows_if_it_has_children
+    n = Node.new
+    n2 = Node.new
+    n.children["a"] =  n2
+    assert n.has_children?
+  end
+
+  def test_a_node_knows_if_it_does_not_have_children?
+    n = Node.new
+    assert n.does_not_have_children?
   end
 
 
