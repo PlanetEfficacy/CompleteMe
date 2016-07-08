@@ -48,5 +48,4 @@ class NodeTest < Minitest::Test
     assert n.does_not_have_children?
   end
 
-
 end

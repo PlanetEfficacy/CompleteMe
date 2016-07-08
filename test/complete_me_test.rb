@@ -3,109 +3,44 @@ require_relative '../lib/complete_me'
 
 class CompleteMeTest < Minitest::Test
 
-  def test_a_complete_me_has_a_root_that_is_a_node
+  def test_a_complete_me_has_a_trie
     c = CompleteMe.new
 
-    root = c.root
-    class_name = root.class.name
+    trie = c.trie
+    class_name = trie.class.name
 
-    assert_equal "Node", class_name
-  end
-
-  def test_a_complete_me_can_update_word_count
-    c = CompleteMe.new
-    expected1 = 0
-    expected2 = 1
-    expected3 = 2
-
-    actual1 = c.count
-    c.insert("pizza")
-    actual2 = c.count
-    c.insert("pizzeria")
-    actual3 = c.count
-
-    assert_equal expected1, actual1, "there are no words"
-    assert_equal expected2, actual2, "the only word is pizza"
-    assert_equal expected3, actual3, "there are two words, pizza and pizzeria"
-  end
-
-  def test_it_can_count_words_in_an_empty_node
-    c = CompleteMe.new
-    node = c.root
-    counter = 0
-
-    actual = c.count(node)
-
-    assert_equal counter, actual
-  end
-
-  def test_it_actually_counts_words
-    c = CompleteMe.new
-    expected1 = 0
-    expected2 = 1
-    expected3 = 4
-
-    count1 = c.count
-    c.insert("pizza")
-    count2 = c.count
-    c.insert("avacado")
-    c.insert("cup")
-    c.insert("pipe")
-    count3 = c.count
-
-    assert_equal expected1, count1
-    assert_equal expected2, count2
-    assert_equal expected3, count3
+    assert_equal "Trie", class_name
   end
 
   def test_can_see_root_node
     c = CompleteMe.new
-    c.insert("pizza")
-    assert_instance_of Node, c.root
-  end
-
-  def test_it_can_insert_word
-    c = CompleteMe.new
-    c.insert("pizza")
-    expected_node_keys = ["p", "i", "z", "z", "a"]
-    node_keys = []
-    node = c.root
-
-    while node.children.keys.length > 0
-      node_keys << node.children.keys[0]
-      node = node.children[node.children.keys[0]]
-    end
-
-    assert_equal node_keys, expected_node_keys
+    t = c.trie
+    t.insert("pizza")
+    assert_instance_of Trie, c.trie
   end
 
   def test_it_knows_pizza_is_in_the_dictionary
     c = CompleteMe.new
-    c.insert("pizza")
+    t = c.trie
+    t.insert("pizza")
     assert_equal ["pizza"], c.suggest("pizza")
   end
 
   def test_it_can_suggest_word_from_prefix
     c = CompleteMe.new
-    c.insert("pizza")
+    t = c.trie
+    t.insert("pizza")
     assert_equal ["pizza"], c.suggest("piz")
-  end
-
-  def test_it_can_insert_words
-    c = CompleteMe.new
-    c.insert("pizza")
-    c.insert("pizzeria")
-
-    assert_equal 2, c.count
   end
 
   def test_it_can_suggest_words
     c = CompleteMe.new
-    c.insert("pizza")
-    c.insert("pizzeria")
-    c.insert("jet")
-    c.insert("pipe")
-    c.insert("pi")
+    t = c.trie
+    t.insert("pizza")
+    t.insert("pizzeria")
+    t.insert("jet")
+    t.insert("pipe")
+    t.insert("pi")
 
     actual = c.suggest("piz")
     assert_equal ["pizza", "pizzeria"], actual
@@ -113,11 +48,12 @@ class CompleteMeTest < Minitest::Test
 
   def test_it_can_populate_from_new_line_separated_list
     c = CompleteMe.new
+    t = c.trie
     c.populate("pizza\npizzeria")
     expected_count = 2
     expected_suggest = ["pizza", "pizzeria"]
 
-    actual_count = c.count
+    actual_count = t.count
     actual_suggest = c.suggest("piz")
 
     assert_equal expected_count, actual_count
@@ -126,6 +62,7 @@ class CompleteMeTest < Minitest::Test
 
   def test_it_can_find_weight
     c = CompleteMe.new
+    t = c.trie
     words = ["pi", "pize", "pizz", "pizza", "pizzeria", "pizzicato"].join("\n")
     c.populate(words)
     expected1 = 1
@@ -151,6 +88,7 @@ class CompleteMeTest < Minitest::Test
 
   def test_it_can_order_suggestions_by_weight
     c = CompleteMe.new
+    t = c.trie
     c.populate("pizza\npizzeria")
     prefix = "piz"
     expected = ["pizzeria", "pizza"]
@@ -164,6 +102,7 @@ class CompleteMeTest < Minitest::Test
 
   def test_it_can_select
     c = CompleteMe.new
+    t = c.trie
     c.populate("pizza\npizzeria")
     expected = ["pizzeria", "pizza"]
 
@@ -175,6 +114,7 @@ class CompleteMeTest < Minitest::Test
 
   def test_it_suggests_correctly_for_piz
     c = CompleteMe.new
+    t = c.trie
     expected = ["pize", "pizza", "pizzeria", "pizzicato", "pizzle"]
     words = ["pizza", "pizzeria", "pizzicato", "pizzle", "pize"].join("\n")
     c.populate(words)
@@ -186,6 +126,7 @@ class CompleteMeTest < Minitest::Test
 
   def test_it_can_track_weight_specific_to_substring_selection
     c = CompleteMe.new
+    t = c.trie
     expected1 = ["pizzeria", "pizza", "pizzicato"]
     expected2 = ["pizza", "pizzicato","pizzeria"]
     words = ["pizza", "pizzeria", "pizzicato"].join("\n")
@@ -208,6 +149,7 @@ class CompleteMeTest < Minitest::Test
 
   def test_it_orders_alphabetically_when_weight_is_equal
     c = CompleteMe.new
+    t = c.trie
     words = ["pizza", "pizzeria", "pizzicato"].join("\n")
     c.populate(words)
     expected_weight1 = 3
@@ -233,6 +175,7 @@ class CompleteMeTest < Minitest::Test
 
   def test_weight_takes_precedence_over_alpha_in_sort
     c = CompleteMe.new
+    t = c.trie
     prefix = "piz"
     expected = ["pizzeria", "pize", "pizz", "pizza", "pizzicato"]
     words = ["pi", "pize", "pizz", "pizza", "pizzeria", "pizzicato"].join("\n")

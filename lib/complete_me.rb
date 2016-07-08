@@ -1,40 +1,17 @@
-require_relative 'node'
+require_relative 'node' #do I need this?
+require_relative 'trie'
 require 'pry'
 
 class CompleteMe
-  attr_accessor :root
+  attr_accessor :trie
 
   def initialize
-    @root = Node.new
-  end
-
-  def count(node=@root)
-    word_count = 0
-    word_count += 1 if node.flag
-    if node.has_children?
-      node.children.keys.each do |letter|
-        child_node = node.children[letter]
-        word_count += count(child_node)
-      end
-    end
-    return word_count
-  end
-
-  def insert(word)
-    node = @root
-    word.each_char.map do |letter|
-      if !node.children.has_key?(letter)
-        node.children[letter] = Node.new
-      end
-      node = node.children[letter]
-    end
-    node.flag = true
-    return
+    @trie = Trie.new
   end
 
   def suggest(prefix)
     suggestions = []
-    node = @root
+    node = @trie.root
     prefix.each_char do |letter|
       return nil if !node.children.has_key?(letter)
       node = node.children[letter]
@@ -77,13 +54,13 @@ class CompleteMe
   def populate(string)
     words = string.split("\n")
     words.each do |word|
-      insert(word)
+      @trie.insert(word)
     end
     return
   end
 
   def select(prefix, selection)
-    node = @root
+    node = @trie.root
     add_weight(node, prefix, selection)
   end
 
@@ -104,14 +81,18 @@ class CompleteMe
     end
   end
 
-  def find_weight(prefix, selection, node=@root)
-    if node.flag && selection.length == 0
+  def find_weight(prefix, selection, node=@trie.root)
+    if found_word_match?(node, selection)
       return node.weight[prefix] ? node.weight[prefix] : 0
     end
     letter = selection[0]
     return nil if !node.children.has_key?(letter)
     child_node = node.children[letter]
     find_weight(prefix, selection[1..-1], child_node)
+  end
+
+  def found_word_match?(node, selection)
+    node.flag && selection.length == 0
   end
 
 end
