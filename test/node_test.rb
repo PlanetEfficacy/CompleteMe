@@ -19,11 +19,14 @@ class NodeTest < Minitest::Test
 
   def test_a_node_flag_can_be_changed
     n = Node.new
-    a1 = n.flag
+    n2 = Node.new
     n.flag = true
-    a2 = n.flag
-    assert_equal false, a1
-    assert_equal true, a2
+
+    a1 = n.flag
+    a2 = n2.flag
+
+    assert_equal true, a1
+    assert_equal false, a2
   end
 
   def test_a_node_has_weight
@@ -34,7 +37,9 @@ class NodeTest < Minitest::Test
   def test_a_node_knows_if_it_has_children
     n = Node.new
     n2 = Node.new
+
     n.children["a"] =  n2
+
     assert n.has_children?
   end
 
